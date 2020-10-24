@@ -15,7 +15,7 @@
     <br />
     <a href="#" type="submit" class="btn btn-primary">Login</a>
     <div class="alert alert-light" role="alert">
-      <router-link to="/resetpassword">Forgot your password?</router-link>
+      <router-link to="/reset-password">Forgot your password?</router-link>
     </div>
   </div>
 </template>

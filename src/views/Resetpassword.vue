@@ -9,7 +9,7 @@
           v-slot="{ errors }"
           :validation-schema="schema"
         >
-        <div class="form-group">
+          <div class="form-group">
             <div class="row">
               <div class="col-6">
                 <label for="email" class="font-weight-bold">Email</label>
@@ -29,9 +29,9 @@
               v-model="data.email"
             />
             <span class="validation">{{ errors.email }}</span>
-        </div>
-         <div class="form-group" v-if="message">
-            <div class="alert alert-danger" role="alert">
+          </div>
+          <div class="form-group" v-if="message">
+            <div class="alert alert-success" role="alert">
               {{ message }}
             </div>
           </div>
@@ -68,14 +68,17 @@
 <script>
 import { Field, Form } from 'vee-validate';
 import * as Yup from 'yup';
-
+import { userService } from '../modules/users/users.service';
+//esta importacion que es lo que hace ?
+import { getFromObjectPathParsed } from '../utils';
 export default {
-  name: 'Login',
+  name: 'Resetpassword',
   data() {
     return {
       data: {
         email: ''
       },
+      successful: false,
       loading: false,
       message: ''
     };
@@ -95,10 +98,26 @@ export default {
     };
   },
   methods: {
-    
+    async onSubmit(args) {
+      console.log('args', args);
 
-    
+      this.loading = true;
+
+      try {
+        const { message } = await userService.resetPassword({
+          email: this.data.email
+        });
+        this.successful = true;
+        this.message = message;
+      } catch (error) {
+        this.successful = false;
+        console.log('error', error.response);
+        this.message =
+          getFromObjectPathParsed(error, 'response.data.message') ||
+          error.message;
+      }
+      this.loading = false;
     }
-  
+  }
 };
 </script>

@@ -70,7 +70,7 @@
             </button>
           </div>
           <div class="form-group text-center">
-            <router-link to="/signup">¿Olvidaste tu clave?</router-link>
+            <router-link to="/reset-password">¿Olvidaste tu clave?</router-link>
             <br />
             <router-link to="/signup">¿No tienes cuenta?</router-link>
           </div>

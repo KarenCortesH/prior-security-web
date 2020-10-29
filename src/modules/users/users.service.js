@@ -16,6 +16,7 @@ class UserService {
         password
     }) {
         console.log('EXECUTING REGISTER');
+        
         const response = await axios({
             url: `${this.baseUrl}users`,
             method: 'post',
@@ -35,7 +36,7 @@ class UserService {
         };
     }
 
-    async login({ email, password }) {
+    async login ({ email, password }) {
         console.log('EXECUTING LOGIN');
         const { user } = await auth.signInWithEmailAndPassword(email, password);
 
@@ -48,6 +49,7 @@ class UserService {
 
     async resetPassword({ email }) {
         console.log('EXECUTING RESET PASSWORD');
+
         const response = await axios({
             url: `${this.baseUrl}users/send-forgotten-password-email`,
             method: 'post',
@@ -55,9 +57,12 @@ class UserService {
                 email
             }
         });
+
         return {
             ...response.data,
             message: 'Te enviamos un correo, revisalo.'
         };
     }
-} export const userService = new UserService();
+} 
+
+export const userService = new UserService();

@@ -7,6 +7,7 @@ import Login from '../views/Login.vue';
 import Signup from '../views/Signup.vue';
 import Home from '../views/Home';
 import ForgottenPassword from '../views/ForgottenPassword.vue';
+import ChangePassword from '../views/ChangePassword.vue';
 
 const routes = [
   {
@@ -26,6 +27,14 @@ const routes = [
     path: '/forgotten-password',
     name: 'Forgotten',
     component: ForgottenPassword
+  },
+  {
+    path: '/change-password',
+    name: 'ChangePassword',
+    component: ChangePassword,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     name: 'Home',

@@ -4,16 +4,18 @@
 
     <div>
       <div class="text-center">
-        <img src="../assets/logo.png" alt="logo" />
+        <router-link @click="closeSideBar" to="/home">
+          <img src="../assets/logo.png" alt="logo" />
+        </router-link>
       </div>
       <br/>
       <div class="text-center">
-        <span class="font-weight-bold">Hola Usuario</span>
+        <span class="font-weight-bold">Hola {{currentUser.firstName}}</span>
       </div>
       <div>
-        <router-link class="font-weight-bold" @click="closeSideBar" to="/manage-contact">Edita tús datos.</router-link>
+        <router-link class="font-weight-bold" @click="closeSideBar" to="/edit-me">Edita tús datos.</router-link>
         <router-link class="font-weight-bold" @click="closeSideBar" to="/change-password">Cambia tú clave.</router-link>
-        <router-link class="font-weight-bold" @click="closeSideBar" to="/home">Maneja tús contactos.</router-link>
+        <router-link class="font-weight-bold" @click="closeSideBar" to="/manage-contact">Maneja tú contacto.</router-link>
       </div>
     </div>
 
@@ -88,8 +90,13 @@ hr {
 </style>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'SideBar',
+  computed: mapState({
+    currentUser: state => state.user
+  }),
   methods: {
     closeSideBar() {
       // console.log('show side bar');

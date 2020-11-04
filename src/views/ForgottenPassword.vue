@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     async onSubmit(args) {
-      console.log('args', args);
+      // console.log('args', args);
 
       this.loading = true;
 
@@ -115,7 +115,6 @@ export default {
         this.message = message;
       } catch (error) {
         this.successful = false;
-        console.log('error', error.response);
         this.message =
           getFromObjectPathParsed(error, 'response.data.message') ||
           error.message;

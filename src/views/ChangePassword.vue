@@ -122,6 +122,7 @@
 import { mapState } from 'vuex';
 import { Field, Form } from 'vee-validate';
 import * as Yup from 'yup';
+
 import { userService } from '../modules/users/users.service';
 import { getFromObjectPathParsed } from '../utils';
 
@@ -144,7 +145,7 @@ export default {
     Form
   },
   computed: mapState({
-    user: state => state.user
+    currentUser: state => state.user
   }), 
   setup() {
     // Using yup to generate a validation schema
@@ -162,14 +163,14 @@ export default {
   },
   methods: {
     async onSubmit(args) {
-      console.log('args', args);
+      // console.log('args', args);
 
       this.loading = true;
 
       try {
         
         const { message } = await userService.changePassword({
-          email: this.user.email,
+          email: this.currentUser.email,
           oldPassword: this.data.oldPassword,
           newPassword: this.data.newPassword
         });
@@ -177,7 +178,6 @@ export default {
         this.message = message;
       } catch (error) {
         this.successful = false;
-        console.log('error', error.response);
         this.message =
           getFromObjectPathParsed(error, 'response.data.message') ||
           error.message;
@@ -185,9 +185,6 @@ export default {
 
       this.loading = false;
     }
-  },
-  mounted() {
-    console.log('user from state', this.user);
   }
 };
 </script>

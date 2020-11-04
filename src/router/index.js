@@ -9,6 +9,7 @@ import Home from '../views/Home';
 import ForgottenPassword from '../views/ForgottenPassword.vue';
 import ChangePassword from '../views/ChangePassword.vue';
 import ManageContact from '../views/ManageContact.vue';
+import EditMe from '../views/EditMe.vue';
 
 const routes = [
   {
@@ -30,6 +31,14 @@ const routes = [
     component: ForgottenPassword
   },
   {
+    name: 'Home',
+    path: '/home',
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/change-password',
     name: 'ChangePassword',
     component: ChangePassword,
@@ -46,9 +55,9 @@ const routes = [
     }
   },
   {
-    name: 'Home',
-    path: '/home',
-    component: Home,
+    path: '/edit-me',
+    name: 'EditMe',
+    component: EditMe,
     meta: {
       requiresAuth: true
     }

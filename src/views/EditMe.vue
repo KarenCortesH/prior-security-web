@@ -12,13 +12,13 @@
           <div class="form-group">
             <div class="row">
               <div class="col-6">
-                <label for="fullname" class="font-weight-bold"
-                  >Nombre completo</label
+                <label for="fullName" class="font-weight-bold"
+                  >Nombre Completo</label
                 >
               </div>
               <div class="col-6 text-right">
                 <small for="fullName" class="font-weight-lighter"
-                  >Nombre de tu contacto</small
+                  >Escribe tú nombre.</small
                 >
               </div>
             </div>
@@ -35,39 +35,18 @@
           <div class="form-group">
             <div class="row">
               <div class="col-6">
-                <label for="email" class="font-weight-bold">Email</label>
+                <label for="confirmPassword" class="font-weight-bold"
+                  >Número de contacto</label
+                >
               </div>
               <div class="col-6 text-right">
-                <small for="email" class="font-weight-lighter">
-                  Email del contacto.</small
+                <small for="confirmPassword" class="font-weight-lighter"
+                  >Tú número celular</small
                 >
               </div>
             </div>
             <Field
-              type="text"
-              class="form-control"
-              id="email"
-              name="email"
-              as="input"
-              v-model="data.email"
-            />
-            <span class="validation">{{ errors.email }}</span>
-          </div>
-          <div class="form-group">
-            <div class="row">
-              <div class="col-6">
-                <label for="phoneNumber" class="font-weight-bold"
-                  >Numero Celular</label
-                >
-              </div>
-              <div class="col-6 text-right">
-                <small for="phoneNumber" class="font-weight-lighter"
-                  >Numero de contacto.</small
-                >
-              </div>
-            </div>
-            <Field
-              type="text"
+              type="number"
               class="form-control"
               id="phoneNumber"
               name="phoneNumber"
@@ -76,7 +55,6 @@
             />
             <span class="validation">{{ errors.phoneNumber }}</span>
           </div>
-
           <div v-if="message" class="form-group">
             <div
               class="alert"
@@ -102,37 +80,22 @@
   </div>
 </template>
 
-<style scoped>
-.centered {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.validation {
-  color: red;
-}
-</style>
-
 <script>
-import { mapState } from 'vuex';
-import { Field, Form } from 'vee-validate';
 import * as Yup from 'yup';
+import { Field, Form } from 'vee-validate';
+import { mapState } from 'vuex';
 
-import { contactService } from '../modules/users/contacts.service';
+import { userService } from '../modules/users/users.service';
 import { getFromObjectPathParsed } from '../utils';
 
 export default {
-  name: 'ManageContact',
+  name: 'EditMe',
   data() {
     return {
       data: {
         id: 0,
-        email: '',
-        phoneNumber: '',
         fullName: '',
-        userId: 0
+        phoneNumber: ''
       },
       successful: false,
       loading: false,
@@ -144,14 +107,12 @@ export default {
     Form
   },
   computed: mapState({
-    currentUser: (state) => state.user
+    currentUser: state => state.user
   }),
   setup() {
-    // Using yup to generate a validation schema
     const schema = Yup.object().shape({
       fullName: Yup.string().min(5).required(),
-      email: Yup.string().email().required(),
-      phoneNumber: Yup.number().required()
+      phoneNumber: Yup.string().min(10).max(10).required()
     });
 
     return {
@@ -159,61 +120,25 @@ export default {
     };
   },
   async created() {
-    this.loading = true;
-
-    try {
-      this.data.userId = this.currentUser.id;
-
-      const result = await contactService.getContact({
-        userId: this.currentUser.id
-      });
-
-      if (result) {
-        this.data.id = result.id;
-        this.data.email = result.email;
-        this.data.phoneNumber = result.phone;
-        this.data.fullName = result.full_name;
-      }
-    } catch (error) {
-      this.successful = false;
-      this.message =
-        getFromObjectPathParsed(error, 'response.data.message') ||
-        error.message;
+    if (this.currentUser.id) {
+      this.data.id = this.currentUser.id;
+      this.data.fullName = this.currentUser.fullName;
+      this.data.phoneNumber = this.currentUser.phone ? this.currentUser.phone : '';
+      console.log('this.data.phoneNumber', this.data.phoneNumber.length);
     }
-
-    this.loading = false;
   },
   methods: {
     async onSubmit(args) {
-      // console.log('args', args);
-
       this.loading = true;
 
       try {
-        const { id, userId, email, phoneNumber, fullName } = this.data;
+        const result = await userService.update({
+          id: this.data.id,
+          fullName: this.data.fullName,
+          phone: this.data.phoneNumber
+        });
 
-        let result;
-        if (id) {
-          result = await contactService.updateContact({
-            userId,
-            email,
-            phone: phoneNumber,
-            fullName
-          });
-        } else {
-          result = await contactService.createContact({
-            userId,
-            email,
-            phone: phoneNumber,
-            fullName
-          });
-        }
-
-        this.data.id = result.id;
-        this.data.email = result.email;
-        this.data.phoneNumber = result.phone;
-        this.data.fullName = result.full_name;
-        this.data.userId = result.user_id;
+        await this.$store.dispatch('setCurrentUser', this.currentUser);
 
         this.successful = true;
         this.message = result.message;
@@ -229,3 +154,16 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.validation {
+  color: red;
+}
+</style>

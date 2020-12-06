@@ -19,6 +19,9 @@
             Emitir alerta
           </button>
         </div>
+        <div class="form-group">
+          <a class="btn btn-primary" href="https://www.cali.gov.co/observatorios/publicaciones/147472/indicadores/" role="button">Reportes de seguridad</a>
+        </div>
         <div v-if="message" class="form-group">
           <div
             class="alert"

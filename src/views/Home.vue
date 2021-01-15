@@ -20,7 +20,7 @@
           </button>
         </div>
         <div class="form-group">
-          <a class="btn btn-primary" href="https://www.cali.gov.co/observatorios/publicaciones/147472/indicadores/" role="button">Reportes de seguridad</a>
+          <a class="btn btn-primary btn-lg btn-block" href="https://www.cali.gov.co/observatorios/publicaciones/147472/indicadores/" target="_blank" role="button">Reportes de seguridad</a>
         </div>
         <div v-if="message" class="form-group">
           <div

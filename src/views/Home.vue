@@ -3,6 +3,17 @@
     <div class="row">
       <div
         class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 centered"
+        v-if="!currentUser"
+      >
+        <div class="form-group text-center">
+          <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 centered"
+        v-if="currentUser"
       >
         <div v-if="loading" class="form-group text-center">
           <div class="spinner-border text-dark" role="status">
@@ -20,7 +31,13 @@
           </button>
         </div>
         <div class="form-group">
-          <a class="btn btn-primary btn-lg btn-block" href="https://www.cali.gov.co/observatorios/publicaciones/147472/indicadores/" target="_blank" role="button">Reportes de seguridad</a>
+          <a
+            class="btn btn-primary btn-lg btn-block"
+            href="https://www.cali.gov.co/observatorios/publicaciones/147472/indicadores/"
+            target="_blank"
+            role="button"
+            >Reportes de seguridad</a
+          >
         </div>
         <div v-if="message" class="form-group">
           <div
@@ -37,41 +54,53 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
-import { alertService } from '../modules/alerts/alerts.service';
-import { getFromObjectPathParsed } from '../utils';
+import { alertService } from "../modules/alerts/alerts.service";
+import { getFromObjectPathParsed } from "../utils";
 
 export default {
-  name: 'Home',
+  name: "Home",
   data() {
     return {
       successful: false,
       loading: false,
-      message: ''
+      message: "",
+      currentUser: null,
     };
   },
-  computed: mapState({
-    currentUser: (state) => state.user
-  }),
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      const { type, payload } = mutation;
+
+      // console.log("mutation.type", type);
+      // console.log("mutation.payload", payload);
+
+      if (type === "setUser" && payload && payload.uid) {
+        this.currentUser = payload;
+      }
+    });
+  },
   methods: {
     async onBtnEmitAlertClick(args) {
       this.loading = true;
 
       try {
-        const { message } = await alertService.emitAlert({ userId: this.currentUser.id });
+        const { message } = await alertService.emitAlert({
+          userId: this.currentUser.id,
+        });
         this.successful = true;
         this.message = message;
       } catch (error) {
         this.successful = false;
         this.message =
-          getFromObjectPathParsed(error, 'response.data.message') ||
+          getFromObjectPathParsed(error, "response.data.message") ||
           error.message;
       }
 
       this.loading = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

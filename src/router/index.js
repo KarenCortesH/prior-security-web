@@ -10,6 +10,7 @@ import ForgottenPassword from '../views/ForgottenPassword.vue';
 import ChangePassword from '../views/ChangePassword.vue';
 import ManageContact from '../views/ManageContact.vue';
 import EditMe from '../views/EditMe.vue';
+import ViewAlert from '../views/ViewAlert.vue';
 
 const routes = [
   {
@@ -61,6 +62,11 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/view-alert',
+    name: 'ViewAlert',
+    component: ViewAlert
   }
 ];
 

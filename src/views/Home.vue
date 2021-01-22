@@ -54,19 +54,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
-import { alertService } from "../modules/alerts/alerts.service";
-import { getFromObjectPathParsed } from "../utils";
+import { alertService } from '../modules/alerts/alerts.service';
+import { getFromObjectPathParsed } from '../utils';
 
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
     return {
       successful: false,
       loading: false,
-      message: "",
-      currentUser: null,
+      message: '',
+      currentUser: null
     };
   },
   created() {
@@ -76,7 +74,7 @@ export default {
       // console.log("mutation.type", type);
       // console.log("mutation.payload", payload);
 
-      if (type === "setUser" && payload && payload.uid) {
+      if (type === 'setUser' && payload && payload.uid) {
         this.currentUser = payload;
       }
     });
@@ -87,20 +85,20 @@ export default {
 
       try {
         const { message } = await alertService.emitAlert({
-          userId: this.currentUser.id,
+          userId: this.currentUser.id
         });
         this.successful = true;
         this.message = message;
       } catch (error) {
         this.successful = false;
         this.message =
-          getFromObjectPathParsed(error, "response.data.message") ||
+          getFromObjectPathParsed(error, 'response.data.message') ||
           error.message;
       }
 
       this.loading = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

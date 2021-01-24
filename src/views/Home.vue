@@ -64,7 +64,9 @@ export default {
       successful: false,
       loading: false,
       message: '',
-      currentUser: null
+      currentUser: null,
+      longitude: null,
+      latitude: null
     };
   },
   created() {
@@ -79,13 +81,45 @@ export default {
       }
     });
   },
+  mounted() {
+    this.getLonAndLat()
+      .then(result => {
+        this.longitude = result.longitude;
+        this.latitude = result.latitude;
+      })
+      .catch(err => {
+        this.successful = false;
+        this.message = err.message;
+        this.loading = false;
+      });
+  },
   methods: {
     async onBtnEmitAlertClick(args) {
       this.loading = true;
 
       try {
+        const result = await this.getLonAndLat();
+
+        if (!result.longitude || !result.latitude) {
+          throw new Error(
+            'no se pudo obtener la geolocalización para emitir la alerta.'
+          );
+        }
+
+        this.longitude = result.longitude;
+        this.latitude = result.latitude;
+      } catch (error) {
+        this.successful = false;
+        this.message = error.message;
+        this.loading = false;
+        return;
+      }
+
+      try {
         const { message } = await alertService.emitAlert({
-          userId: this.currentUser.id
+          userId: this.currentUser.id,
+          longitude: this.longitude,
+          latitude: this.latitude
         });
         this.successful = true;
         this.message = message;
@@ -97,6 +131,29 @@ export default {
       }
 
       this.loading = false;
+    },
+    async getLonAndLat() {
+      const { geolocation } = navigator;
+
+      return new Promise((resolve, reject) => {
+        if (!geolocation) {
+          return reject('geolocation is not supported by this browser.');
+        }
+
+        geolocation.getCurrentPosition(
+          (position) => {
+            const result = {
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude
+            };
+
+            console.log('result', result);
+
+            return resolve(result);
+          },
+          (err) => reject(err)
+        );
+      });
     }
   }
 };

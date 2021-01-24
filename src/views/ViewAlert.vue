@@ -11,12 +11,24 @@
       </div>
       <div
         v-if="state !== 'error'"
-        class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1 centered text-center"
+        class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1"
       >
-        <p>
-          Desde este punto se emitio la alerta de {{ name }}
-        </p>
-        <Map :center="{ lat: latitude, lng: longitude }" />
+        <div class="row">
+          <div class="col-12 text-center">
+            <img src="../assets/logo.png" alt="logo" />
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-12 text-center">
+            <p>Desde este punto se emitio la alerta por parte de {{ name }}:</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <Map :center="{ lat: latitude, lng: longitude }" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,5 +74,11 @@ export default {
   flex-direction: column;
   justify-content: center;
   min-height: 100vh;
+}
+
+img {
+  height: 70px;
+  width: 80px;
+  margin-top: 15px;
 }
 </style>

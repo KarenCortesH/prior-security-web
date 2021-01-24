@@ -8,7 +8,7 @@ class AlertService {
     this.baseUrl = enviroment.API_BASE_URL;
   }
 
-  async emitAlert({ userId }) {
+  async emitAlert({ userId, longitude, latitude }) {
     const token = await userService.getTokenFromCurrentUser();
 
     const response = await axios({
@@ -18,7 +18,9 @@ class AlertService {
         Authorization: `Bearer ${token}`
       },
       data: {
-        user_id: userId
+        user_id: userId,
+        longitude,
+        latitude
       }
     });
 

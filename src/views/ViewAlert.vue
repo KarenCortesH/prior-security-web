@@ -11,19 +11,20 @@
       </div>
       <div
         v-if="state !== 'error'"
-        class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1 centered"
+        class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1 centered text-center"
       >
         <p>
-          we are going to show the marker in map for longitude
-          {{ longitude }} and latitude {{ latitude }} alert emitted by
-          {{ name }}
+          Desde este punto se emitio la alerta de {{ name }}
         </p>
+        <Map :center="{ lat: latitude, lng: longitude }" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Map from '../components/Map';
+
 export default {
   name: 'ViewAlert',
   data() {
@@ -34,6 +35,9 @@ export default {
       latitude: null,
       name: null
     };
+  },
+  components: {
+    Map
   },
   created() {
     const query = this.$route.query;

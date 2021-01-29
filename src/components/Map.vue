@@ -13,8 +13,6 @@
 <script>
 import environment from '../environment';
 
-console.log(environment.HERE_MAPS_API_KEY);
-
 export default {
   name: 'HereMap',
   props: {

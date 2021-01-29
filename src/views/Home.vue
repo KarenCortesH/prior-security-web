@@ -54,6 +54,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
+
 import { alertService } from '../modules/alerts/alerts.service';
 import { getFromObjectPathParsed } from '../utils';
 
@@ -64,23 +66,19 @@ export default {
       successful: false,
       loading: false,
       message: '',
-      currentUser: null,
       longitude: null,
       latitude: null
     };
   },
-  created() {
-    this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      const { type, payload } = mutation;
-
-      // console.log("mutation.type", type);
-      // console.log("mutation.payload", payload);
-
-      if (type === 'setUser' && payload && payload.uid) {
-        this.currentUser = payload;
+  computed: mapState({
+    currentUser: state => {
+      if(state.user.id) {
+        return state.user;
       }
-    });
-  },
+
+      return null;
+    }
+  }),
   mounted() {
     this.getLonAndLat()
       .then(result => {
@@ -147,7 +145,7 @@ export default {
               latitude: position.coords.latitude
             };
 
-            console.log('result', result);
+            // console.log('result', result);
 
             return resolve(result);
           },
